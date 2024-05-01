@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Hello, AGOL!</title>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="description" content="" />
- 
+  <title>Hello, AGOL!</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+
   <!-- calls for the arcgis api's CSS file and JS library. -->
-<link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
-<script src="https://js.arcgis.com/4.25/"></script>
- 
+  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.25/"></script>
+
   <!-- Adding the modules, API key, and map constant needed for a full screen map app -->
-<script>
+  <script>
+ 
   require([  
 "esri/config",  
 "esri/Map",  
-"esri/views/MapView",   
+"esri/views/MapView",  
 "esri/Graphic",  
-"esri/layers/GraphicsLayer",   
+"esri/layers/GraphicsLayer",  
 "esri/layers/FeatureLayer"
 ], function(esriConfig,Map, MapView, Graphic, GraphicsLayer,FeatureLayer) {
- 
+
       esriConfig.apiKey = "AAPKbbf1d614464f43d6893e89040496e546zaR0zSPYnguI_N0zab0yje30u1aq2GS4mz7fzZ78FQ-aPa8vIq4PFEd2C6ceqofz";
       const map = new Map({
         basemap: "arcgis-topographic" // Basemap layer
       });
- 
+
       const view = new MapView({
           map: map,
           center: [-82.324829, 29.651634], // Longitude, latitude
@@ -34,37 +35,38 @@
         });
         const graphicsLayer = new GraphicsLayer();  
         map.add(graphicsLayer);
- 
- 
+
+
         const point = { //Create a point  
         type: "point",  
-        longitude: -82.276605,    //long lat of Stevie Ray Vaughan Statue29.652184512181012, -82.34590990740084
-        latitude:  29.686786};
+        longitude: -82.276669,    //long lat of Stevie Ray Vaughan Statue
+        latitude: 29.686786};
 
-  
+       
         const polyline = {
     type: "polyline",
     paths: [
-        [-82.276605, 29.686786], // Starting point
-        [-82.276605, 29.686786],
-        [ -81.310547, 28.424726],
-        [-80.279616, 25.795242]  // Ending point , 
+        [-82.27660535072394, 29.686786126064515], // Starting point
+        [-82.27660535072394, 29.686786126064515],
+        [ -81.31054749848397,28.424726029709174],
+        [-80.27961648695316, 25.79524245427987]  // Ending point , 
         // Add more points if needed
+
     ]
 };
- 
+
 const polygon = {
     type: "polygon",
     rings: [
         // Add the coordinates of the vertices of the polygon
-        [-83.085160,30.152015], // Example point,   
-        [--81.565091, 30.174462], // Example point , 
-        [-80.156350, 25.499313], // , 
-        [-81.701517, 25.616454], // Example point 4, 
-        [-83.085160,30.152015] // Closing the polygon
+        [-83.0851602234079,30.152015251982036], // Example point,   
+        [-81.56509169860513, 30.174462418726847], // Example point , 
+        [-80.15635064405683, 25.49931365186833], // , 
+        [-81.70151741197559, 25.616454300344188], // Example point 4, 
+        [-83.0851602234079,30.152015251982036] // Closing the polygo
     ]
 };
- 
+
         const simpleMarkerSymbol = {  
         type: "simple-marker",  
         style:"cross",
@@ -74,13 +76,13 @@ const polygon = {
             width: 100
   }  
 };
- 
+
 const simpleLineSymbol = {
     type: "simple-line",
     color: [0, 0, 255], // Orange
     width: 4
 };
- 
+
 const simpleFillSymbol = {
     type: "simple-fill",
     color: [227, 139, 79, 0.4], // Orange color with transparency
@@ -92,13 +94,13 @@ const simpleFillSymbol = {
 const popupTemplate = {
     title: "{Name}",
     content: "{Description}"
-}
-const attributes = {
+ }
+ const attributes = {
     Name: "Gainesville, FL",
     Description: "A city in northern Florida, known for the University of Florida."
-}
- 
- 
+ }
+
+
         const pointGraphic = new Graphic({  
          geometry: point,  
         symbol: simpleMarkerSymbol,
@@ -116,24 +118,25 @@ const polygonGraphic = new Graphic({
 graphicsLayer.add(polygonGraphic);
 graphicsLayer.add(pointGraphic);
 graphicsLayer.add(polylineGraphic);
- 
+
 // Define a pop-up for usaeduLayer
         const popupEduusa = {
   "title": "EDUs",
   "content": "<b>Name:</b> {INSTNM}<br><b>City:</b> {CITY}<br><br><b>Longitude:</b> {LONGITUD}<br><b>Latitude:</b> {LATITUDE}<br>"
 }
- 
+
 const usaeduLayer = new FeatureLayer({
 url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer", //get URL from AGOL Item Page
 //adding the popup here
 outFields: ["INSTNM","CITY","LONGITUD","LATITUDE"],
 popupTemplate: popupEduusa
-});
-map.add(usaeduLayer);
- 
- 
- 
-const airportRenderer = {
+ });
+ map.add(usaeduLayer);
+
+
+
+
+ const airportRenderer = {
         "type": "simple",
         "symbol": {
           "type": "picture-marker",
@@ -142,13 +145,13 @@ const airportRenderer = {
           "height": "10px"
         }
       }
- 
-// Define a pop-up for usaeduLayer
-const popupAirport = {
+
+ // Define a pop-up for usaeduLayer
+ const popupAirport = {
   "Name": "Airports",
   "content": "<b>Type:</b> {Fac_Type}<br><b>Elevation:</b>{Elevation}<br>"
 }
- 
+
 //const to make the airport labels
 const airportLabels = {
   symbol: {
@@ -168,24 +171,25 @@ const airportLabels = {
     expression: "$feature.Fac_Name"
   }
 };
-const airportLayer = new FeatureLayer({
-url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_file/FeatureServer", 
+ const airportLayer = new FeatureLayer({
+url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_file/FeatureServer",
 renderer: airportRenderer,
 definitionExpression: "Fac_Type = 'AIRPORT'",
 labelingInfo: [airportLabels], //adding the labels
-//adding sql to filter for airports,
+ //adding sql to filter for airports,
 //get URL from AGOL Item Page
 //adding the popup here
 //adding the popup here
 outFields: ["Fac_Type","Elevation"],
 popupTemplate: popupAirport
-});
- 
-map.add(airportLayer);
- 
- 
- 
-const heliportRederer = {
+ });
+
+ map.add(airportLayer);
+
+
+
+
+ const heliportRederer = {
         "type": "simple",
         "symbol": {
           "type": "picture-marker",
@@ -194,25 +198,27 @@ const heliportRederer = {
           "height": "18px"
         }
       }
- 
- 
+
+
+
 const heliportLayer = new FeatureLayer({
-url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_file/FeatureServer", 
+url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_file/FeatureServer",
 renderer: heliportRederer,
 definitionExpression: "Fac_Type = 'heliport'"
+ });
+
+
+ map.add(heliportLayer);
 });
- 
- 
-map.add(heliportLayer);
-});
- 
- 
- 
-    
-</script>
- 
+
+
+
+
+   
+  </script>
+
   <!-- css to make a full screen map -->
-<style>
+  <style>
     html,
     body,
     #viewDiv {
@@ -221,13 +227,13 @@ map.add(heliportLayer);
       height: 100%;
       width: 100%;
     }
-</style>
- 
+  </style>
+
 </head>
 <body>
- 
+
   <!-- the div to displays the map  -->
-<div id="viewDiv"></div>
- 
+  <div id="viewDiv"></div>
+
 </body>
 </html>
