@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hello, AGOL!</title>
+  <title>AGOL REST API</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="" />
@@ -19,8 +19,10 @@
 "esri/views/MapView",  
 "esri/Graphic",  
 "esri/layers/GraphicsLayer",  
-"esri/layers/FeatureLayer"
-], function(esriConfig,Map, MapView, Graphic, GraphicsLayer,FeatureLayer) {
+"esri/layers/FeatureLayer",
+"esri/widgets/Editor",
+"esri/widgets/Legend"
+], function(esriConfig,Map, MapView, Graphic, GraphicsLayer,FeatureLayer,Editor,Legend) {
 
       esriConfig.apiKey = "AAPKbbf1d614464f43d6893e89040496e546zaR0zSPYnguI_N0zab0yje30u1aq2GS4mz7fzZ78FQ-aPa8vIq4PFEd2C6ceqofz";
       const map = new Map({
@@ -37,12 +39,13 @@
         map.add(graphicsLayer);
 
 
+       
         const point = { //Create a point  
         type: "point",  
-        longitude: -82.276669,    //long lat of Stevie Ray Vaughan Statue
-        latitude: 29.686786};
+        longitude: -82.27660535072394,    //long lat of Stevie Ray Vaughan Statue29.652184512181012, -82.34590990740084
+        latitude:  29.686786126064515};
 
-       
+  
         const polyline = {
     type: "polyline",
     paths: [
@@ -51,10 +54,9 @@
         [ -81.31054749848397,28.424726029709174],
         [-80.27961648695316, 25.79524245427987]  // Ending point , 
         // Add more points if needed
-
     ]
 };
-
+ 
 const polygon = {
     type: "polygon",
     rings: [
@@ -63,14 +65,15 @@ const polygon = {
         [-81.56509169860513, 30.174462418726847], // Example point , 
         [-80.15635064405683, 25.49931365186833], // , 
         [-81.70151741197559, 25.616454300344188], // Example point 4, 
-        [-83.0851602234079,30.152015251982036] // Closing the polygo
+        [-83.0851602234079,30.152015251982036] // Closing the polygon
+
     ]
 };
-
+   
         const simpleMarkerSymbol = {  
         type: "simple-marker",  
         style:"cross",
-        color: [0, 0, 139],  // Color of blues rock
+        color: [0, 0, 249],  // Color of blues rock
         outline: {  
             color: [255, 0, 0], // White  
             width: 100
@@ -141,8 +144,8 @@ popupTemplate: popupEduusa
         "symbol": {
           "type": "picture-marker",
           "url": "https://sounny.github.io/agol/outline_local_airport_black_24dp.png",
-          "width": "10px",
-          "height": "10px"
+          "width": "20px",
+          "height": "20px"
         }
       }
 
@@ -193,9 +196,9 @@ popupTemplate: popupAirport
         "type": "simple",
         "symbol": {
           "type": "picture-marker",
-          "url": "https://safaei-mo.github.io/AGOL/helicopter_FILL0_wght400_GRAD0_opsz24.png",
-          "width": "18px",
-          "height": "18px"
+          "url": "https://github.com/ToritGeoAI/AGOL_Write_2/blob/main/airport-icon-2048x2048-qif416d2.png",
+          "width": "25px",
+          "height": "25px"
         }
       }
 
@@ -209,12 +212,98 @@ definitionExpression: "Fac_Type = 'heliport'"
 
 
  map.add(heliportLayer);
+
+
+
+
+
+
+ const myAirportsRederer = {
+        "type": "simple",
+        "symbol": {
+          "type": "picture-marker",
+          "url": "https://github.com/akterairin/agol3_rest/upload/main",
+          "width": "18px",
+          "height": "18px"
+        }
+      }
+
+
+      const MyairportLabels = {
+  symbol: {
+    type: "text",
+    color: "#FFFFFF",
+    haloColor: "#5E8D74",
+    haloSize: "2px",
+    font: {
+      size: "16px",
+      family: "Noto Sans",
+      style: "italic",
+      weight: "normal"
+    }
+  },
+  labelPlacement: "above-center",
+  labelExpressionInfo: {
+    expression: "$feature.Airport_Code"
+  }
+};
+
+
+
+//adding the const for the feature layer
+const myAirports = new FeatureLayer({
+ url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Airports_Visited/FeatureServer",
+ renderer: myAirportsRederer,
+ labelingInfo: [MyairportLabels],
+ //adding the popup here
+ outFields: ["Airport_Code"],
+
 });
 
+//adding the feature layer to the map
+map.add(myAirports);
+
+// Set the point layer's LayerInfo
+const pointInfos = {
+ layer: myAirports
+}
+
+// Begin Editor constructor
+const editor = new Editor({
+ view: view,
+ layerInfos: [pointInfos]
+ }); // End Editor constructor
+
+// Add the widget to the view
+view.ui.add(editor, "top-left");
 
 
 
-   
+
+
+let legend = new Legend({
+  view: view,
+  layerInfos: [{
+    layer: myAirports,
+    title: 'Airports torit visited'
+  },
+  {
+    layer: usaeduLayer,
+    title: 'Colleges and Universities'
+  },
+  {
+    layer: airportLayer,
+    title: 'Airports'
+  },
+  {
+    layer: heliportLayer,
+    title: 'Heliports'
+  }]
+});
+
+view.ui.add(legend, "bottom-right");
+
+});
   </script>
 
   <!-- css to make a full screen map -->
